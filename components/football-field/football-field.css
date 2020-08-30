@@ -1,0 +1,26 @@
+body {
+	background-color: tomato;
+}
+
+.football-field {
+	width: 200px;
+	height: 150px;
+	border: 10px groove black;
+	background-color: #00ff00;
+	position: relative;
+	overflow: hidden;
+	cursor: pointer;
+}
+
+.football-field__ball {
+	position: absolute;
+	background-color: black;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	top: 20%;
+	left: 20%;
+
+	transition: all 0.5s;
+}
+
