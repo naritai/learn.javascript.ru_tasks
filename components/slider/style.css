@@ -2,10 +2,11 @@ body {
 	width: 100vw;
 	height: 100vh;
 	display: flex;
-	justify-content: center;
+	flex-direction: column;
+	/*justify-content: center;*/
 	align-items: center;
 
-	background-color: #a04000;
+	background-color:  #5d6d7e;
 }
 
 
@@ -13,10 +14,11 @@ body {
 	position: relative;
 	width: 300px;
 	height: 30px;
-	margin: 5px;
-	
-	border-radius: 5px;
-	background-color: #f4f6f7;
+	margin-top: 50px;
+	margin-bottom: 50px;
+
+	border-radius: 2px;
+	background-color:  #f5cba7;
 }
 
 .slider-line__traveler {
@@ -26,7 +28,9 @@ body {
 	top: -20px;
 	left: 10px;
 
-	border-radius: 5px;
-	background-color: #d2b4de;
+	border-radius: 2px;
+	background-color: #af7ac5;
 	cursor: pointer;
+
+	transition: left 0.08s;
 }
