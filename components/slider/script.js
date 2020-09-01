@@ -2,38 +2,53 @@ class Slider {
 	constructor(options) {
 		this.slider = options.slider;
 		this.traveler = options.traveler;
+		this.shiftX = 0;
+		this.shiftY = 0;
 		this.sliderCoords = this.slider.getBoundingClientRect();
-
-		this._onMouseDown = this._onMouseDown.bind(this);
-		this._onMouseMove = this._onMouseMove.bind(this);
-		this._onMouseUp = this._onMouseUp.bind(this);
-
 		this.traveler.addEventListener('dragstart', () => false);
 		this.traveler.addEventListener('mousedown', this._onMouseDown);
 	};
 
-	_onMouseDown(event) {
+	_onMouseDown = (event) => {					// class fields syntax to save this
 		event.preventDefault(); 				// prevent text selection
 		this.traveler.style.zIndex = 1000; 		// put elem above all other elements
-		document.addEventListener('mousemove', this._onMouseMove);
-		document.addEventListener('mouseup', this._onMouseUp);
+
+		if (event.target.closest('.slider-line__traveler')) { // sure that the traveler is that we really need
+			this._onStartDrag(event.clientX, event.clientY);
+		}
 	};
 
-	_onMouseMove(event) {
-		const shiftX = event.clientX - this.traveler.getBoundingClientRect().left;
-		const { left } = this.sliderCoords;
-		let value = event.clientX - left; // shiftX breaks for now
+	_onStartDrag = (clientX, clientY) => {
+		const travelerCoords = this.traveler.getBoundingClientRect();
+		this.shiftX = clientX - travelerCoords.left;
+		this.shiftY = clientY - travelerCoords.top;
+
+		document.addEventListener('mousemove', this._onDocumentMouseMove);
+		document.addEventListener('mouseup', this._onDocumentMouseUp);
+	};
+
+	_onEndDrag = () => {
+		document.removeEventListener('mousemove', this._onDocumentMouseMove);
+		document.removeEventListener('mouseup', this._onDocumentMouseUp);
+	}
+
+	_onDocumentMouseMove = (event) => {		
+		this.moveAt(event.clientX);
+	};
+
+	_onDocumentMouseUp = (event) => {
+		this._onEndDrag();
+	};
+
+	moveAt = (clientX) => {
+		let newLeft = clientX - this.shiftX - this.sliderCoords.left;
+		newLeft = newLeft < 0 ? 0 : newLeft;
+
 		const rightEdge = this.slider.offsetWidth - this.traveler.offsetWidth;
-
-		value = value < 0 ? 0 : value;
-		value = value > rightEdge ? rightEdge : value;
-		this.traveler.style.left = value + 'px';
-	};
-
-	_onMouseUp(event) {
-		document.removeEventListener('mousemove', this._onMouseMove);
-		document.removeEventListener('mouseup', this._onMouseUp);
-	};
+		newLeft = newLeft > rightEdge ? rightEdge : newLeft;
+		
+		this.traveler.style.left = newLeft + 'px';
+	};	
 }
 
 const slider = new Slider({
